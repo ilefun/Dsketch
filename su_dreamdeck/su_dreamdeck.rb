@@ -23,7 +23,7 @@ module DreamDeck
 	        ## Set up the WebDialog
 	      	@default_width,@default_height=400,800
 	        super "Dsketch", false, "DreamdeckVR", @default_width, @default_height, 100, 100, false
-	        print "Load "+html_ui_path
+	        print "Load "+html_ui_path+"\n"
 
 	        if html_ui_path.start_with?("http")
 	        	set_url(html_ui_path)
@@ -33,18 +33,17 @@ module DreamDeck
 	        set_size @default_width,@default_height
 
 	        add_action_callback('gen_image') do |dlg, params|
-	        	begin
-		        	#get resolution from ui
-		        	res=dlg.get_element_value('res_input')
+	        	res=dlg.get_element_value('res_input')
+	        	print 'Get resolution value from ui '+res+"\n"
+	        	
+	        	#get resolution from ui
+		       	if (res && res.to_i()>0)
 		        	vr_image=Dreeck_CubicImage::CubicImage.new(width=res.to_i(),height=res.to_i())
 					vr_image.start
-
-		        rescue
-		        	vr_image=Dreeck_CubicImage::CubicImage.new()
+				else
+					vr_image=Dreeck_CubicImage::CubicImage.new()
 					vr_image.start
-
-		        end
-
+				end
 				
 				img_folder=File.dirname(vr_image.export_list[0])
 				zip_file=img_folder+'\\cubic_images.zip'
@@ -83,7 +82,7 @@ current_ruby_file = File.basename(__FILE__)
 unless file_loaded?(current_ruby_file)
 	# Add main menu item
 	plugin_menu=UI.menu("Plugins")
-	# url_path="D:\\dreeck_vr\\server_ui\\ui.html"
+	# url_path="D:\\da.html"
 	url_path="http://www.dreeck.com/dreeck/index.htm"
 	plugin_menu.add_item("Dsketch") {dreeck_vr=DreamDeck::DreeckVR.new(url_path)}
 

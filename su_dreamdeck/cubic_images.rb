@@ -22,7 +22,7 @@ attr_reader :export_list
   def initialize(width=800,height=800,image_folder=ENV['TMP'],image_prefix='dreeckvr')
     @out_iamges_path=image_folder+'\\'+image_prefix+'_'+Time.now.to_i.to_s
     FileUtils::mkdir_p @out_iamges_path
-    print 'Output images to folder '+@out_iamges_path+"\n"
+    print 'Output images to folder '+@out_iamges_path+" , resolution is "+width.to_s()+"\n"
     
     @width,@height=width,height
     @export_list=[]
