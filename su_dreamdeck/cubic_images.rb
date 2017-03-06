@@ -10,14 +10,18 @@ class CubicImage
 
 attr_reader :export_list
 
-  def initialize(width=800,height=800,image_folder=ENV['TMP'],image_prefix='dreeckvr')
+  def initialize(width=800,height=800,image_folder=ENV['LEFUN_TMP'] || ENV['TMP'],image_prefix='dreeckvr')
     @lefun_tmp_folder='D:\\lefun_cubic_images_tmp'
+    if not image_folder
+        image_folder=@lefun_tmp_folder
+    end
+
     if (!File.directory?(image_folder))
         if createdirs(@lefun_tmp_folder)==true
             image_folder=@lefun_tmp_folder
             puts 'No TMP folder found,use '+@lefun_tmp_folder+"\n"
         else
-            UI.messagebox "找不到临时目录[TMP],也没有找到 D:盘，无法生成全景图。\\n建议给您的机器添加环境变量TMP，来指定全景图临时路径."
+            UI.messagebox "找不到临时目录[TMP],也没有找到 D:盘，无法生成全景图。\\n建议给您的机器添加环境变量 TMP 或 LEFUN_TMP，来指定全景图临时路径."
             return
         end
     end
