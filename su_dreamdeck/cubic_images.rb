@@ -1,7 +1,7 @@
 
 ##example
 # require 'su_dreamdeck/cubic_images'
-# vr_image=Dreeck_CubicImage::CubicImage.new()
+# vr_image=CubicImage.new()
 # vr_image.start
 # print vr_image.export_list.to_s
 
@@ -9,8 +9,6 @@
 #
 require 'sketchup.rb'
 require 'fileutils'
-
-module Dreeck_CubicImage
 
 class CubicImage
 
@@ -20,9 +18,20 @@ class CubicImage
 attr_reader :export_list
 
   def initialize(width=800,height=800,image_folder=ENV['TMP'],image_prefix='dreeckvr')
-    @out_iamges_path=image_folder+'\\'+image_prefix+'_'+Time.now.to_i.to_s
+    @lefun_tmp_folder='D:\\lefun_cubic_images_tmp'
+    if (!File.directory?(image_folder))
+        if createdirs(@lefun_tmp_folder)==true
+            image_folder=@lefun_tmp_folder
+            puts 'No TMP folder found,use '+lefun_tmp_folder+"\n"
+        else
+            UI.messagebox "Cannot find both TMP folder and D: disk to write images.!"
+            return
+        end
+    end
+
+    @out_iamges_path=image_folder.encode('utf-8')+'\\'+image_prefix+'_'+Time.now.to_i.to_s
     FileUtils::mkdir_p @out_iamges_path
-    print 'Output images to folder '+@out_iamges_path+" , resolution is "+width.to_s()+"\n"
+    puts "\n"+'Output images to folder '+@out_iamges_path
     
     @width,@height=width,height
     @export_list=[]
@@ -30,6 +39,20 @@ attr_reader :export_list
     @top_offset=0.0001
     @create_pages=false
   end
+  
+  #===================
+  ##create dir recursively
+  #===================
+    def createdirs(path)
+        if(!File.directory?(path))
+            if(!createdirs(File.dirname(path)))
+                return false
+            end
+            Dir.mkdir(path)
+        end
+        return true
+    end
+
 #========================
 
 ### Get info about current camera
@@ -66,26 +89,13 @@ attr_reader :export_list
     view=model.active_view
     camera=view.camera
     ptest=camera.perspective?
-
-
-    if (ptest)
-        puts "Perspective Camera.... check."
-
-        shadowinfo = model.shadow_info
-        old_sun_shading=shadowinfo['UseSunForAllShading']
-        shadowinfo['UseSunForAllShading']=true
-        print 'Set [UseSunForAllShading] to true for cubic images'+"\n"
-
-        gen_images
-    
-        shadowinfo['UseSunForAllShading']=old_sun_shading
-        print 'Set [UseSunForAllShading] to old value'+"\n"
-
-    else
+    if (ptest && File.directory?(@out_iamges_path))
+      puts "\nPerspective Camera.... check.\n"
+      gen_images
+    else 
           @errorcode=1
           CubicImage::errormsg
     end
-
   end #### CubicImage.start
 #========================
 
@@ -280,5 +290,4 @@ attr_reader :export_list
 
 end### End class CubicImage
 
-end #end Dreeck_CubicImage
 #=============================================================================

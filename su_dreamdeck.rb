@@ -1,11 +1,11 @@
-
+﻿
 
 require 'sketchup.rb'
 require 'extensions.rb'
 
-su_dreeckvr = SketchupExtension.new "DreamDeck VR", "su_dreamdeck/su_dreamdeck.rb"
-su_dreeckvr.copyright= 'Copyright 2010-2016 LeFun'
-su_dreeckvr.creator= 'www.lefun.com'
-su_dreeckvr.version = '0.1'
-su_dreeckvr.description = "This tool is used for designers to quickly enjoy the vr of your sketch scene."
+su_dreeckvr = SketchupExtension.new "Dsketch", "su_dreamdeck/su_dreamdeck.rb"
+su_dreeckvr.copyright= 'Copyright 2010-2016 Dream Deck'
+su_dreeckvr.creator= 'Dsketch'
+su_dreeckvr.version = '1.3'
+su_dreeckvr.description = "让设计更VR"
 Sketchup.register_extension su_dreeckvr, true
