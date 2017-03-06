@@ -17,7 +17,7 @@ attr_reader :export_list
             image_folder=@lefun_tmp_folder
             puts 'No TMP folder found,use '+@lefun_tmp_folder+"\n"
         else
-            UI.messagebox "Cannot find both TMP folder and D: disk to write images.!"
+            UI.messagebox "找不到临时目录[TMP],也没有找到 D:盘，无法生成全景图。\\n建议给您的机器添加环境变量TMP，来指定全景图临时路径."
             return
         end
     end
