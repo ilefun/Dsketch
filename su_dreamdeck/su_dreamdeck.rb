@@ -1,8 +1,9 @@
+$LOAD_PATH.unshift File.dirname(__FILE__)
+
 require 'sketchup'
 require 'su_dreamdeck/cubic_images'
 require 'rubygems'
 require 'zip'
-require 'Open3'
 ## Wrap into main module
 
 module DreamDeck
@@ -40,10 +41,12 @@ module DreamDeck
 				img_folder=File.dirname(vr_image.export_list[0])
 				zip_file=img_folder+'\\cubic_images.zip'
 				upload_response_file=img_folder+'\\upload.log'
+				upload_response_file.gsub!('\\', '\\\\\\\\')
 
 				zip_compress_files(vr_image.export_list,zip_file)
 				zip_file.gsub!('\\', '\\\\\\\\')
 				
+				# upload zip file
 				upload_succ=upload_zip_file(dlg.get_element_value('userId'),
 											dlg.get_element_value('projectId'),
 											dlg.get_element_value('projectName'),
@@ -57,8 +60,12 @@ module DreamDeck
 				dlg.execute_script(js_command2)
 
 				if upload_succ.to_s == 'true'
-					UI.messagebox "Upload vr images successfully!"
+					UI.messagebox "上传全景图成功!"
 				end
+
+				# clear temp data
+				vr_image.deletedirs img_folder
+		        puts "\nRemove lefun tmp folder "+img_folder
 
 	        end
 
@@ -70,7 +77,7 @@ module DreamDeck
 			curl_exe.gsub!('/', '\\\\\\\\')
 			lefun_url='http://www.dreeck.com/dreamDeck/web/write/dreeck/project/zip/add'
 			
-			cmd='"'+curl_exe+'" -F userId='+user_id+' -F projectId='+proj_id+' -F projectName='+proj_name.force_encoding('UTF-8').encoding('gbk')+' -F "dreeckProjectZipFile=@'+file.force_encoding('UTF-8')+'" "'+lefun_url+'"'
+			cmd='"'+curl_exe+'" -F userId='+user_id+' -F projectId='+proj_id+' -F projectName='+proj_name.force_encoding('UTF-8')+' -F "dreeckProjectZipFile=@'+file.force_encoding('UTF-8')+'" "'+lefun_url+'"'
 			cmd=cmd+' > '+upload_log
 
 			puts "\n"+'Run '+cmd+' to upload zip file.'

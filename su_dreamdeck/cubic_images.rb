@@ -1,11 +1,4 @@
 
-##example
-# require 'su_dreamdeck/cubic_images'
-# vr_image=CubicImage.new()
-# vr_image.start
-# print vr_image.export_list.to_s
-
-
 #
 require 'sketchup.rb'
 require 'fileutils'
@@ -22,14 +15,15 @@ attr_reader :export_list
     if (!File.directory?(image_folder))
         if createdirs(@lefun_tmp_folder)==true
             image_folder=@lefun_tmp_folder
-            puts 'No TMP folder found,use '+lefun_tmp_folder+"\n"
+            puts 'No TMP folder found,use '+@lefun_tmp_folder+"\n"
         else
             UI.messagebox "Cannot find both TMP folder and D: disk to write images.!"
             return
         end
     end
 
-    @out_iamges_path=image_folder.encode('utf-8')+'\\'+image_prefix+'_'+Time.now.to_i.to_s
+    @out_image_folder=image_folder.encode('utf-8')
+    @out_iamges_path=@out_image_folder+'\\'+image_prefix+'_'+Time.now.to_i.to_s
     FileUtils::mkdir_p @out_iamges_path
     puts "\n"+'Output images to folder '+@out_iamges_path
     
@@ -53,6 +47,19 @@ attr_reader :export_list
         return true
     end
 
+    def deletedirs(path)
+        Dir.foreach(path) do |item|
+            if item != "." and item != ".."
+              itempath = path+'/' + item
+              if File.directory?(itempath)
+                deletedirs(itempath)
+              else
+                File.delete(itempath)
+              end
+            end
+        end
+        Dir.delete(path)
+    end
 #========================
 
 ### Get info about current camera
