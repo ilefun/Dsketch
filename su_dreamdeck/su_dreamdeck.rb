@@ -1,9 +1,10 @@
-$LOAD_PATH.unshift File.dirname(__FILE__)
+﻿$LOAD_PATH.unshift File.dirname(__FILE__)
 
 require 'sketchup'
 require 'su_dreamdeck/cubic_images'
 require 'rubygems'
 require 'zip'
+require 'Open3'
 ## Wrap into main module
 
 module DreamDeck
@@ -75,12 +76,16 @@ module DreamDeck
 		def upload_zip_file(user_id,proj_id,proj_name,file,upload_log)
 			curl_exe=File.dirname(__FILE__.force_encoding('UTF-8'))+'/curl.exe'
 			curl_exe.gsub!('/', '\\\\\\\\')
-			lefun_url='http://www.dreeck.com/dreamDeck/web/write/dreeck/project/zip/add'
-			
-			cmd='"'+curl_exe+'" -F userId='+user_id+' -F projectId='+proj_id+' -F projectName='+proj_name.force_encoding('UTF-8')+' -F "dreeckProjectZipFile=@'+file.force_encoding('UTF-8')+'" "'+lefun_url+'"'
+			lefun_url='http://www.dreeck.com/dreamDeck/web/write/dreeck/project/zip/ruby/add'
+
+			cmd='"'+curl_exe+'" -F userId='+user_id+' -F projectId='+proj_id+' -F projectName='+proj_name+' -F "dreeckProjectZipFile=@'+file.force_encoding('UTF-8')+'" "'+lefun_url+'"'
 			cmd=cmd+' > '+upload_log
 
 			puts "\n"+'Run '+cmd+' to upload zip file.'
+			# stdin,stdout,stderr=Open3.popen3(cmd.encode('gbk'))
+			# return true
+			# result=system cmd.encode('gbk')
+			# return result
 			result=system cmd.encode('gbk')
 			return result
 		end
