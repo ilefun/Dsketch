@@ -60,9 +60,9 @@ module DreamDeck
 				js_command2="$('#img_path').val('"+zip_file+"');"
 				dlg.execute_script(js_command2)
 
-				if upload_succ.to_s == 'true'
-					UI.messagebox "上传全景图成功!"
-				end
+				# if upload_succ.to_s == 'true'
+				# 	UI.messagebox "上传全景图成功!"
+				# end
 
 				# clear temp data
 				vr_image.deletedirs img_folder
@@ -79,7 +79,7 @@ module DreamDeck
 			lefun_url='http://www.dreeck.com/dreamDeck/web/write/dreeck/project/zip/ruby/add'
 
 			cmd='"'+curl_exe+'" -F userId='+user_id+' -F projectId='+proj_id+' -F projectName='+proj_name+' -F "dreeckProjectZipFile=@'+file.force_encoding('UTF-8')+'" "'+lefun_url+'"'
-			cmd=cmd+' > '+upload_log
+			cmd=cmd+' > "'+upload_log+'"'
 
 			puts "\n"+'Run '+cmd+' to upload zip file.'
 			# stdin,stdout,stderr=Open3.popen3(cmd.encode('gbk'))
