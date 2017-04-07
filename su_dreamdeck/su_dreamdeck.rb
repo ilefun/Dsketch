@@ -1,4 +1,4 @@
-﻿$LOAD_PATH.unshift File.dirname(__FILE__)
+﻿$LOAD_PATH.unshift File.dirname(__FILE__.force_encoding('UTF-8'))
 
 require 'sketchup'
 require 'su_dreamdeck/cubic_images'
