@@ -101,10 +101,10 @@ attr_reader :export_list
     camera=view.camera
     ptest=camera.perspective?
     if (ptest && File.directory?(@out_iamges_path))
-        # shadowinfo = model.shadow_info
-        # old_sun_shading=shadowinfo['UseSunForAllShading']
-        # shadowinfo['UseSunForAllShading']=true
-        # print 'Set [UseSunForAllShading] to true for cubic images'+"\n"
+        shadowinfo = model.shadow_info
+        old_sun_shading=shadowinfo['UseSunForAllShading']
+        shadowinfo['UseSunForAllShading']=true
+        print 'Set [UseSunForAllShading] to true for cubic images'+"\n"
         
         puts "\nPerspective Camera.... check.\n"
         gen_images

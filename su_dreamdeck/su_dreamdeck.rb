@@ -1,10 +1,8 @@
-﻿$LOAD_PATH.unshift File.dirname(__FILE__)
+﻿$LOAD_PATH.unshift File.dirname(__FILE__.force_encoding('UTF-8'))
 
 require 'sketchup'
 require 'su_dreamdeck/cubic_images'
 require 'rubygems'
-require 'zip'
-require 'Open3'
 ## Wrap into main module
 
 module DreamDeck
@@ -74,11 +72,11 @@ module DreamDeck
 	    end
 
 		def upload_zip_file(user_id,proj_id,proj_name,file,upload_log)
-			curl_exe=File.dirname(__FILE__.force_encoding('UTF-8'))+'/curl.exe'
+			curl_exe=File.dirname(__FILE__.force_encoding('UTF-8'))+'/curl/curl.exe'
 			curl_exe.gsub!('/', '\\\\\\\\')
 			lefun_url='http://www.dreeck.com/dreamDeck/web/write/dreeck/project/zip/ruby/add'
 
-			cmd='"'+curl_exe+'" -F userId='+user_id+' -F projectId='+proj_id+' -F projectName='+proj_name+' -F "dreeckProjectZipFile=@'+file.force_encoding('UTF-8')+'" "'+lefun_url+'"'
+			cmd='"'+curl_exe+'" -F userId='+user_id+' -F projectId='+proj_id+' -F projectName='+proj_name.force_encoding('UTF-8')+' -F "dreeckProjectZipFile=@'+file.force_encoding('UTF-8')+'" "'+lefun_url+'"'
 			cmd=cmd+' > "'+upload_log+'"'
 
 			puts "\n"+'Run '+cmd+' to upload zip file.'
@@ -91,15 +89,20 @@ module DreamDeck
 		end
 		
 		def zip_compress_files(file_list,zip_file_name)
-		    Zip::File.open(zip_file_name, Zip::File::CREATE) do |zipfile|
-		      file_list.each do |filepath|
-		        # Two arguments:
-		        # - The name of the file as it will appear in the archive
-		        # - The original file, including the path to find it
-		        filename=File.basename(filepath)
-		        zipfile.add(filename, filepath)
-		      end
-		    end
+			zip_exe=File.dirname(__FILE__.force_encoding('UTF-8'))+'/7z/7z.exe'
+			zip_exe.gsub!('/', '\\\\\\\\')
+			dest_zip=zip_file_name.force_encoding('UTF-8')
+			dest_zip.gsub!('\\', '\\\\\\\\')
+			cmd='"'+zip_exe+'" a "'+dest_zip+'"'
+			
+			file_list.each do |filepath|
+				source_f=filepath.force_encoding('UTF-8')
+				source_f.gsub!('\\', '\\\\\\\\')
+				cmd+=' "'+source_f+'"'
+			end
+
+			puts "\n"+'Run '+cmd+' to compress files to zip.'
+			system cmd.encode('gbk')
 		end
 
 	end #end DreeckVR class
