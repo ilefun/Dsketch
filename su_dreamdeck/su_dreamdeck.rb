@@ -66,6 +66,7 @@ module DreamDeck
 				vr_image.deletedirs img_folder
 		        puts "\nRemove lefun tmp folder "+img_folder
 
+		        show
 	        end
 
 	        show
@@ -98,7 +99,7 @@ module DreamDeck
 			file_list.each do |filepath|
 				source_f=filepath.force_encoding('UTF-8')
 				source_f.gsub!('\\', '\\\\\\\\')
-				
+
 				cmd+=' "'+source_f+'"'
 			end
 
