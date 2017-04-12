@@ -98,15 +98,13 @@ module DreamDeck
 			file_list.each do |filepath|
 				source_f=filepath.force_encoding('UTF-8')
 				source_f.gsub!('\\', '\\\\\\\\')
-				
 				cmd+=' "'+source_f+'"'
 			end
 
 			puts "\n"+'Run '+cmd+' to compress files to zip.'
 			system cmd.encode('gbk')
-
 			if (!File::exists?(zip_file_name))
-				UI.messagebox "生成zip压缩包失败!"	
+				UI.messagebox "!"	
 			end
 		end
 
