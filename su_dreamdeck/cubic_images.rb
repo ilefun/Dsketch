@@ -143,7 +143,7 @@ attr_reader :export_list
     camera=camera.set @eye0, tgt1, up1
     fov=camera.fov=90
     perspective=true
-    ar=camera.aspect_ratio=1.0
+    ar=camera.aspect_ratio=0.0
     iw=camera.image_width=24.0
     Sketchup.set_status_text "Writing Image 1 of 6"
         view.write_image fname, @width, @height, true, 100
