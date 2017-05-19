@@ -1,8 +1,10 @@
 ﻿$LOAD_PATH.unshift File.dirname(__FILE__.force_encoding('UTF-8'))
+$LOAD_PATH.unshift File.dirname(__FILE__.force_encoding('UTF-8'))+'/lib'
 
 require 'sketchup'
 require 'su_dreamdeck/cubic_images'
 require 'rubygems'
+require 'rest_client'
 ## Wrap into main module
 
 module DreamDeck
@@ -80,12 +82,19 @@ module DreamDeck
 			cmd='"'+curl_exe+'" -F userId='+user_id+' -F projectId='+proj_id+' -F projectName='+proj_name.force_encoding('UTF-8')+' -F "dreeckProjectZipFile=@'+file.force_encoding('UTF-8')+'" "'+lefun_url+'"'
 			cmd=cmd+' > "'+upload_log+'"'
 
-			puts "\n"+'Run '+cmd+' to upload zip file.'
+			#puts "\n"+'Run '+cmd+' to upload zip file.'
+			puts "use RestClient upload zip file"
 			# stdin,stdout,stderr=Open3.popen3(cmd.encode('gbk'))
 			# return true
 			# result=system cmd.encode('gbk')
 			# return result
-			result=system cmd.encode('gbk')
+			#result=system cmd.encode('gbk')
+			response=RestClient.post(lefun_url, 
+			:userId=>user_id,
+			:projectId=>proj_id,
+			:projectName=>proj_name,
+			:dreeckProjectZipFile => File.new(file.force_encoding('UTF-8')))
+			result=response.to_str
 			return result
 		end
 		
