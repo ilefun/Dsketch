@@ -11,15 +11,15 @@ rescue LoadError => e
   raise LoadError, "no such file to load -- net/https. Try running apt-get install libopenssl-ruby"
 end
 
-require File.dirname(__FILE__) + '/restclient/exceptions'
-require File.dirname(__FILE__) + '/restclient/request'
-require File.dirname(__FILE__) + '/restclient/abstract_response'
-require File.dirname(__FILE__) + '/restclient/response'
-require File.dirname(__FILE__) + '/restclient/raw_response'
-require File.dirname(__FILE__) + '/restclient/resource'
-require File.dirname(__FILE__) + '/restclient/payload'
-require File.dirname(__FILE__) + '/restclient/net_http_ext'
-require File.dirname(__FILE__) + '/restclient/mimes'
+require File.dirname(__FILE__.force_encoding('UTF-8')) + '/restclient/exceptions'
+require File.dirname(__FILE__.force_encoding('UTF-8')) + '/restclient/request'
+require File.dirname(__FILE__.force_encoding('UTF-8')) + '/restclient/abstract_response'
+require File.dirname(__FILE__.force_encoding('UTF-8')) + '/restclient/response'
+require File.dirname(__FILE__.force_encoding('UTF-8')) + '/restclient/raw_response'
+require File.dirname(__FILE__.force_encoding('UTF-8')) + '/restclient/resource'
+require File.dirname(__FILE__.force_encoding('UTF-8')) + '/restclient/payload'
+require File.dirname(__FILE__.force_encoding('UTF-8')) + '/restclient/net_http_ext'
+require File.dirname(__FILE__.force_encoding('UTF-8')) + '/restclient/mimes'
 
 # This module's static methods are the entry point for using the REST client.
 #
@@ -107,7 +107,7 @@ module RestClient
   end
 
   def self.version
-    version_path = File.dirname(__FILE__) + "/../VERSION"
+    version_path = File.dirname(__FILE__.force_encoding('UTF-8')) + "/../VERSION"
     return File.read(version_path).chomp if File.file?(version_path)
     "0.0.0"
   end
