@@ -109,7 +109,7 @@ attr_reader :export_list
         puts "\nPerspective Camera.... check.\n"
         gen_images
     else 
-          @errorcode=1
+          @@errorcode=1
           CubicImage::errormsg
     end
   end #### CubicImage.start
@@ -118,11 +118,13 @@ attr_reader :export_list
 
 #========================
   def CubicImage::errormsg
-    if @errorcode==nil
+    if @@errorcode==nil
       UI.messagebox "There has been an unexplained error. Please try again."
-    else @errorcode==1
+    elsif @@errorcode==2
+        UI.messagebox "请移动下相机，现在相机视点与目标在同一个位置"
+    elsif @@errorcode==1
       UI.messagebox "Failure. Camera must be Perspective"
-      @errorcode=nil
+      @@errorcode=nil
     end
   exit
   end ### CubicImage.errormsg
@@ -140,6 +142,14 @@ attr_reader :export_list
     fname= ( @out_iamges_path + "\\mobile_f.jpg")
     tgt1=[@tgt0.x, @tgt0.y, @eye0.z]
     up1=[0,0,1]
+    #
+    #tgt1=[@eye0.x,@eye0.y,@eye0.z]
+    eye_list=[@eye0.x,@eye0.y,@eye0.z]
+    if tgt1==eye_list
+        @@errorcode=2
+        CubicImage::errormsg
+    end
+    #
     camera=camera.set @eye0, tgt1, up1
     fov=camera.fov=90
     perspective=true

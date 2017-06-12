@@ -5,6 +5,7 @@ require 'sketchup'
 require 'su_dreamdeck/cubic_images'
 require 'rubygems'
 require 'rest_client'
+require 'timeout'
 ## Wrap into main module
 
 module DreamDeck
@@ -48,19 +49,31 @@ module DreamDeck
 				zip_file.gsub!('\\', '\\\\\\\\')
 				
 				# upload zip file
-				upload_succ=upload_zip_file(dlg.get_element_value('userId'),
+
+				start_time=Time.now()
+				begin
+				Timeout.timeout(30){
+				
+				@upload_succ=upload_zip_file(dlg.get_element_value('userId'),
 											dlg.get_element_value('projectId'),
 											dlg.get_element_value('projectName'),
 											zip_file,
 											upload_response_file)
 
-				js_command1="$('#uploadResult').val('"+upload_succ.to_s+"');"
+				}
+				rescue Timeout::Error
+					UI.messagebox "上传时间超过30秒，请检查网络后从试"	
+				end
+				end_time=Time.now()
+				my_time=end_time-start_time
+				puts "上传全景图使用了 "+my_time.to_s+" s"
+				js_command1="$('#uploadResult').val('"+@upload_succ.to_s+"');"
 				dlg.execute_script(js_command1)
 				
 				js_command2="$('#img_path').val('"+zip_file+"');"
 				dlg.execute_script(js_command2)
 
-				# if upload_succ.to_s == 'true'
+				# if @upload_succ.to_s == 'true'
 				# 	UI.messagebox "上传全景图成功!"
 				# end
 
@@ -93,6 +106,8 @@ module DreamDeck
 			:userId=>user_id,
 			:projectId=>proj_id,
 			:projectName=>proj_name,
+			:timeout=>100,
+			:open_timeout=>100,
 			:dreeckProjectZipFile => File.new(file.force_encoding('UTF-8')))
 			result=response.to_str
 			return result
